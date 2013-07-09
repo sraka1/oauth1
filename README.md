@@ -60,13 +60,12 @@ provider you will be connecting to. The simplest way to attain the files is via 
 
     $connection = new BasicOAuth('abc890', '123xyz');
 
-2) Using the built $connection object you will ask Twitter for temporary credentials. The `oauth_callback` value is required.
+2) Using the built $connection object you will ask the endpoint for temporary credentials. The `oauth_callback` value is required.
 
     $tempCredentials = $connection->getRequestToken('http://asdf.com/oauthcallback');
 
-3) Now that we have temporary credentials the user has to go to Twitter and authorize the app
-to access and updates their data. You can also pass a second parameter of FALSE to not use [Sign
-in with Twitter](https://dev.twitter.com/docs/auth/sign-twitter).
+3) Now that we have temporary credentials the user has to go to endpoint and authorize the app
+to access and updates their data. You can also pass a second parameter of FALSE to not use request login (re-authenticate, however not all OAuth1 endpoints support this).
 
     $redirect_url = $connection->getAuthorizeURL($tempCredentials); // Must login
     $redirect_url = $connection->getAuthorizeURL($tempCredentials, FALSE); //Doesn't have to login
@@ -76,7 +75,7 @@ in with Twitter](https://dev.twitter.com/docs/auth/sign-twitter).
     $authUrl = https://api.twitter.com/oauth/authenticate?oauth_token=xyz123
     i.e.: header('Location: ' . $authUrl);
 
-5) The user is now on twitter.com and may have to login. Once authenticated with Twitter they will
+5) The user is now on the endpoint site's server and may have to login. Once authenticated with the server they will
 will either have to click on allow/deny, or will be automatically redirected back to the callback.
 
 6) Now that the user has returned to callback.php and allowed access we need to build a new
@@ -103,3 +102,10 @@ methods. Directly copy the path from the API documentation. This consists of $co
     $account = $connection->get('account/verify_credentials');
     $status = $connection->post('statuses/update', array('status' => 'Text of status here', 'in_reply_to_status_id' => 123456));
     $status = $connection->delete('statuses/destroy/12345');
+
+10) Profit!
+
+Tests
+================================
+
+The library has been confirmed to work with Twitter, BitBucket and Dropbox so far. Unit tests are on the way.
