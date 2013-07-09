@@ -13,6 +13,7 @@ use \OAuth1\OAuthConsumer;
 use \OAuth1\OAuthSignatureMethod;
 use \OAuth1\OAuthUtil;
 use \OAuth1\OAuthRequest;
+use \OAuth1\OAuthException;
 
 /**
  * Twitter OAuth class
@@ -48,28 +49,30 @@ class BasicOAuth {
 
   public $requestTokenURL;
 
+  public $callbackURL;
+
 
   /**
    * Set API URLS
    */
   public function accessTokenURL()  
   {
-    return $accessTokenURL; 
+    return $this->accessTokenURL; 
   }
 
   public function authenticateURL() 
   { 
-    return $authenticateURL; 
+    return $this->authenticateURL; 
   }
   
   public function authorizeURL()    
   { 
-    return $authorizeURL; 
+    return $this->$authorizeURL; 
   }
   
   public function requestTokenURL() 
   { 
-    return $requestTokenURL; 
+    return $this->requestTokenURL; 
   }
 
   /**
@@ -100,6 +103,7 @@ class BasicOAuth {
   function getRequestToken($oauth_callback) {
     $parameters = array();
     $parameters['oauth_callback'] = $oauth_callback; 
+    $this->callbackURL = $oauth_callback; 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
@@ -116,9 +120,9 @@ class BasicOAuth {
       $token = $token['oauth_token'];
     }
     if (empty($sign_in_with_twitter)) {
-      return $this->authorizeURL() . "?oauth_token={$token}";
+      return $this->authorizeURL() . "?oauth_token={$token}&oauth_callback={$this->callbackURL}";
     } else {
-       return $this->authenticateURL() . "?oauth_token={$token}";
+      return $this->authenticateURL() . "?oauth_token={$token}&oauth_callback={$this->callbackURL}";
     }
   }
 
