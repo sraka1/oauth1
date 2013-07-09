@@ -1,0 +1,19 @@
+{
+    "name": "sraka1/oauth1",
+    "description": "Light PHP wrapper for the OAuth 1.0/1.0a protocol.",
+    "authors": [
+        {
+            "name": "Jakob Murko",
+            "email": "jakob@zepppelin.com"
+        },
+        {
+            "name": "Abraham Williams",
+            "email": "abraham@abrah.am"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "../"
+        ]
+    }
+}
