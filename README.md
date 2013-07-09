@@ -23,6 +23,7 @@ Parameters
 There are a number of parameters you can modify after creating a BasicOAuth object. Some are required:
 
 Required:
+
     $connection->accessTokenURL
 
     $connection->authenticateURL
