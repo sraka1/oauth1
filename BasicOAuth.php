@@ -51,6 +51,10 @@ class BasicOAuth {
 
   public $callbackURL;
 
+  public $sslCert;
+
+  public $sslKey;
+
 
   /**
    * Set API URLS
@@ -84,13 +88,20 @@ class BasicOAuth {
   /**
    * construct TwitterOAuth object
    */
-  function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+  function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL, $client_ssl_cert = null, $client_ssl_key = null) {
     $this->sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
       $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
     } else {
       $this->token = NULL;
+    }
+    if (isset($client_ssl_cert)) {
+      $this->sslCert = $client_ssl_cert;
+    }
+
+    if (isset($client_ssl_key)) {
+      $this->sslKey = $client_ssl_key;
     }
   }
 
@@ -231,6 +242,14 @@ class BasicOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
+
+    if (isset($this->sslKey)) {
+      curl_setopt($ci, CURLOPT_SSLKEY, $this->sslKey);
+    }
+
+    if (isset($this->sslCert)) {
+      curl_setopt($ci, CURLOPT_SSLCERT, $this->sslCert);
+    }
 
     switch ($method) {
       case 'POST':
